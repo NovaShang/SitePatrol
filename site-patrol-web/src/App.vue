@@ -15,7 +15,7 @@
   </el-config-provider>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ElConfigProvider } from "element-plus";
 import Home from "./components/Home.vue";
 </script>
