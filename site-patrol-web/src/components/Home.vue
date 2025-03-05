@@ -230,12 +230,12 @@ onMounted(() => {
 // Function to navigate to page2 (the Unity WebGL page) with the model_file_id as a URL parameter.
 const navigateToUnityPage = (modelFileId: string) => {
   // Update the URL to your actual Unity WebGL page address.
-  window.location.href = `/unity?model_file_id=${modelFileId}`;
+  window.location.href = `https://sitepatrol.shanggao.me/unity/index.html?model_file_id=${modelFileId}`;
 };
 
 const start = async () => {
-  if (fileList.value.length == 0 || fileList.value[0].status != "success"){
-    alert("Please upload gltf model first.")
+  if (fileList.value.length == 0 || fileList.value[0].status != "success") {
+    alert("Please upload gltf model first.");
     return;
   }
   let fileUrl: string = fileList.value[0].response as any;

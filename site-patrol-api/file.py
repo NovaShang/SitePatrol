@@ -1,5 +1,5 @@
 from fastapi import APIRouter, UploadFile
-from fastapi.responses import RedirectResponse
+from fastapi.responses import StreamingResponse
 import aioboto3
 import uuid
 from pydantic_settings import BaseSettings
@@ -40,13 +40,38 @@ async def upload(file: UploadFile):
 
 @file_router.get("/download")
 async def download(file_path: str):
-    async with make_s3_client() as client:
-        download_url = await client.generate_presigned_url(
-            "get_object",
-            Params={"Bucket": settings.s3_bucket, "Key": PATH_PREFIX + file_path},
-            ExpiresIn=3600,
+    # 1) 不要在这里用 async with，而是先手动拿到异步 client
+    client_context = make_s3_client()
+    # 通过手动调用 __aenter__(), __aexit__() 来管理生命周期
+    s3_client = await client_context.__aenter__()  # 打开异步 client
+
+    try:
+        # 2) 拿到 S3 对象
+        response = await s3_client.get_object(Bucket=settings.s3_bucket, Key=PATH_PREFIX + file_path)
+        content_type = response.get("ContentType", "application/octet-stream")
+        filename = file_path.split("/")[-1]
+        body = response["Body"]
+
+        # 3) 定义流式生成器
+        async def file_stream():
+            try:
+                async for chunk in body.iter_chunks():
+                    yield chunk
+            finally:
+                # 当流式传输完毕（或异常中断）后，才会走到这里来关闭连接
+                body.close()
+                await client_context.__aexit__(None, None, None)
+
+        # 4) 返回流响应
+        return StreamingResponse(
+            file_stream(),
+            media_type=content_type,
+            headers={"Content-Disposition": f'attachment; filename="{filename}"'}
         )
-    return RedirectResponse(download_url)
+    except:
+        # 如果在获取数据、或准备流式传输前就出错，也要记得关闭
+        await client_context.__aexit__(None, None, None)
+        raise
 
 
 def make_s3_client():
