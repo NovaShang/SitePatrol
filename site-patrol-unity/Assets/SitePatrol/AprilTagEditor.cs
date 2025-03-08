@@ -1,16 +1,15 @@
-using System.Collections;
 using System.Linq;
-using System.Threading.Tasks;
 using AprilTag;
-using Newtonsoft.Json;
 using RuntimeGizmos;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace SitePatrol
 {
-    public class MarkerEditor : MonoBehaviour
+    /// <summary>
+    /// 
+    /// </summary>
+    public class AprilTagEditor : MonoBehaviour
     {
         public TransformGizmo gizmo;
 
@@ -44,12 +43,12 @@ namespace SitePatrol
                 lastSelectedMarker = gizmo.mainTargetRoot;
             }
 
-            if (!WaitForClick && Global.Markers.Count == 0)
+            if (!WaitForClick && WebApiClient.Markers.Count == 0)
             {
                 statusText.text = "Add at least 1 AprilTag. 2 for better tracking.";
             }
 
-            if (!initialized && Global.Markers.Count > 0)
+            if (!initialized && WebApiClient.Markers.Count > 0)
             {
                 initialized = true;
                 LoadAll();
@@ -105,7 +104,7 @@ namespace SitePatrol
             }
 
             // 加载所有标记
-            foreach (var marker in Global.Markers)
+            foreach (var marker in WebApiClient.Markers)
             {
                 var instance = Instantiate(markerPrefab, marker.Position, marker.Rotation);
                 instance.transform.SetParent(markersRoot.transform, false);
@@ -122,7 +121,7 @@ namespace SitePatrol
         public async void SaveAll()
         {
             // 遍历 markersRoot下的所有子物体，存到Global.Markers
-            Global.Markers.Clear();
+            WebApiClient.Markers.Clear();
             foreach (Transform child in markersRoot.transform)
             {
                 var visualMarker = child.GetComponent<VisualMarker>();
@@ -132,13 +131,13 @@ namespace SitePatrol
                         visualMarker.id,
                         child.position,
                         child.rotation);
-                    Global.Markers.Add(marker);
+                    WebApiClient.Markers.Add(marker);
                 }
             }
 
-            await WebApis.Call("PUT", $"/api/v1/model_files/{Global.ModelFileId}/markers", new
+            await WebApiClient.Call("PUT", $"/api/v1/model_files/{WebApiClient.ModelFileId}/markers", new
             {
-                markers = Global.Markers.Select(x => new
+                markers = WebApiClient.Markers.Select(x => new
                 {
                     id = x.ID.ToString(),
                     position = new[] {x.Position.x, x.Position.y, x.Position.z},

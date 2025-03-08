@@ -23,7 +23,7 @@ namespace SitePatrol
 
         private Quaternion originalRotation;
 
-        public float emaSmoothingFactor = 0.0f;
+        public float emaSmoothingFactor = 0.1f;
         public float dispersionThreshold = 0.05f; // 位置数据的标准差阈值，超过该值则认为数据分散(m)
         public float min2PointDistance = 0.5f; // 两个点之间的最小距离，低于该值则不能用这两个点对齐坐标系(m)
 
@@ -44,9 +44,9 @@ namespace SitePatrol
 
         public void Update()
         {
-            if (Global.Markers.Count > 0 && modeledMarkers.Count == 0)
+            if (WebApiClient.Markers.Count > 0 && modeledMarkers.Count == 0)
             {
-                modeledMarkers = Global.Markers.ToDictionary(x => x.ID);
+                modeledMarkers = WebApiClient.Markers.ToDictionary(x => x.ID);
                 foreach (var i in modeledMarkers)
                 {
                     if (!modeledDistances.ContainsKey(i.Key))

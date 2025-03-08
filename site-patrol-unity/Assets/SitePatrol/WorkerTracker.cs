@@ -28,7 +28,7 @@ namespace SitePatrol
     /// <summary>
     /// 计算相机在模型坐标系的位置，展示相机路径，然后把相机姿态上传到服务端
     /// </summary>
-    public class CameraTracker : MonoBehaviour
+    public class WorkerTracker : MonoBehaviour
     {
         public Camera trackedCamera;
         public CoordinateMatcher coordinateMatcher;
@@ -62,10 +62,10 @@ namespace SitePatrol
 
         void Update()
         {
-            if (ws == null && Global.BaseUrl != null)
+            if (ws == null && WebApiClient.BaseUrl != null)
             {
-                ws = new WebSocket(Global.BaseUrl.Replace("http://", "ws://").Replace("https://", "wss://") +
-                                   $"/api/vi/model_files/{Global.ModelFileId}/patrol/ws");
+                ws = new WebSocket(WebApiClient.BaseUrl.Replace("http://", "ws://").Replace("https://", "wss://") +
+                                   $"/api/vi/model_files/{WebApiClient.ModelFileId}/patrol/ws");
                 ws.OnOpen += () => { Debug.Log("WebSocket 连接成功"); };
                 ws.OnError += (e) => { Debug.Log("WebSocket 错误: " + e); };
                 ws.OnClose += (e) => { Debug.Log("WebSocket 连接关闭"); };

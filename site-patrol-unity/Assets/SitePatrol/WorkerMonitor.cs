@@ -29,17 +29,17 @@ namespace SitePatrol
 
         void Update()
         {
-            if (ws == null && Global.BaseUrl != null)
+            if (ws == null && WebApiClient.BaseUrl != null)
             {
-                ws = new WebSocket(Global.BaseUrl.Replace("http://", "ws://").Replace("https://", "wss://") +
-                                   $"/api/vi/model_files/{Global.ModelFileId}/patrol/ws");
+                ws = new WebSocket(WebApiClient.BaseUrl.Replace("http://", "ws://").Replace("https://", "wss://") +
+                                   $"/api/vi/model_files/{WebApiClient.ModelFileId}/patrol/ws");
                 ws.OnOpen += () => { Debug.Log("WebSocket 连接成功"); };
                 ws.OnError += (e) => { Debug.Log("WebSocket 错误: " + e); };
                 ws.OnClose += (e) => { Debug.Log("WebSocket 连接关闭"); };
                 ws.OnMessage += (bytes) =>
                 {
                     // 将字节数据转为字符串
-                    string json = System.Text.Encoding.UTF8.GetString(bytes);
+                    var json = System.Text.Encoding.UTF8.GetString(bytes);
                     Debug.Log($"收到消息: {json}");
 
                     // 尝试反序列化为 WorkerUpdateMessage
@@ -84,7 +84,7 @@ namespace SitePatrol
         private void HandleWorkerUpdate(WorkerUpdateMessage updateMsg)
         {
             // 如果 workerDict 中没有该 patrol_id，则创建
-            if (!workerDict.TryGetValue(updateMsg.patrol_id, out WorkerData workerData))
+            if (!workerDict.TryGetValue(updateMsg.patrol_id, out var workerData))
             {
                 // 创建新实例
                 var workerObj = Instantiate(workerPrefab, transform);
@@ -100,13 +100,13 @@ namespace SitePatrol
             }
 
             // 将模型坐标转换到世界坐标
-            Vector3 localPos = new Vector3(updateMsg.position[0], updateMsg.position[1], updateMsg.position[2]);
-            Vector3 worldPos = modelRoot.transform.TransformPoint(localPos);
+            var localPos = new Vector3(updateMsg.position[0], updateMsg.position[1], updateMsg.position[2]);
+            var worldPos = modelRoot.transform.TransformPoint(localPos);
 
             // orientation 仅表示偏航角 (yaw, 单位: 度)，我们假设是围绕 Y 轴的旋转
-            Quaternion localRot = Quaternion.Euler(0, updateMsg.orientation, 0);
+            var localRot = Quaternion.Euler(0, updateMsg.orientation, 0);
             // 如果 orientation 是相对于模型本身的旋转，则要把模型的世界旋转也考虑进来
-            Quaternion worldRot = modelRoot.transform.rotation * localRot;
+            var worldRot = modelRoot.transform.rotation * localRot;
 
             // 更新工人可视化对象的位置和朝向
             workerData.workerObject.transform.position = worldPos;

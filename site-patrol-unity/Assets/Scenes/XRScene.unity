@@ -1496,6 +1496,7 @@ GameObject:
   m_Component:
   - component: {fileID: 903186406}
   - component: {fileID: 903186407}
+  - component: {fileID: 903186412}
   - component: {fileID: 903186408}
   - component: {fileID: 903186409}
   - component: {fileID: 903186410}
@@ -1535,13 +1536,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83e471a7e2f564870b1599e2ab70f042, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraManager: {fileID: 2109110448}
+  image: {fileID: 903186412}
+  cam: {fileID: 2109110450}
   tagSize: 0.092
   decimation: 4
   coordinateMatcher: {fileID: 903186408}
   boxMaterial: {fileID: 2100000, guid: 912be210668e34991b0ab5690c55ecd0, type: 2}
   showBoxes: 1
-  needTransform: 1
 --- !u!114 &903186408
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1608,6 +1609,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   modelRoot: {fileID: 3697619478689910300}
   addColliders: 0
+--- !u!114 &903186412
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 903186404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a406a42f4fd546a99d83b0e7d59d1d7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  needTransform: 0
+  cameraManager: {fileID: 2109110448}
+  camPreview: {fileID: 0}
 --- !u!1 &1121007106
 GameObject:
   m_ObjectHideFlags: 0
@@ -2251,7 +2267,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1464747879
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2533,6 +2549,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2060339521}
   - component: {fileID: 2060339520}
+  - component: {fileID: 2060339522}
   m_Layer: 0
   m_Name: EarlyManager
   m_TagString: Untagged
@@ -2552,7 +2569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dba997916f68543bba5529f4e037d7fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  arCameraManager: {fileID: 2109110448}
+  image: {fileID: 2060339522}
   manager: {fileID: 903186410}
   scanUI: {fileID: 1121007106}
 --- !u!4 &2060339521
@@ -2570,6 +2587,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2060339522
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2060339519}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a406a42f4fd546a99d83b0e7d59d1d7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  needTransform: 0
+  cameraManager: {fileID: 2109110448}
+  camPreview: {fileID: 0}
 --- !u!1 &2064784754
 GameObject:
   m_ObjectHideFlags: 0

@@ -15,9 +15,9 @@ namespace SitePatrol
 
         private void Update()
         {
-            if (Global.ModelFileId != null && qrContent == null)
+            if (WebApiClient.ModelFileId != null && qrContent == null)
             {
-                qrContent = Global.ModelFileId;
+                qrContent = WebApiClient.ModelFileId;
                 var texture = GenerateQR(qrContent);
                 display.texture = texture;
             }
