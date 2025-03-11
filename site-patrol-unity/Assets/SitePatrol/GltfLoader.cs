@@ -14,6 +14,8 @@ namespace SitePatrol
 
         private bool modelLoaded = false;
 
+        public ToastMessage toastMessage;
+
         private void Update()
         {
             if (!modelLoaded && WebApiClient.ModelFileUrl != null)
@@ -42,12 +44,14 @@ namespace SitePatrol
                 if (!File.Exists(cachedFilePath))
                 {
                     Debug.Log("从网络下载 glTF: " + url);
+                    toastMessage?.ShowMessage("Downloading Model...");
                     UnityWebRequest www = UnityWebRequest.Get(url);
                     yield return www.SendWebRequest();
 
                     if (www.result != UnityWebRequest.Result.Success)
                     {
                         Debug.LogError("下载错误: " + www.error);
+                        toastMessage?.ShowMessage("Download Error: " + www.error);
                         yield break;
                     }
                     else
@@ -100,6 +104,8 @@ namespace SitePatrol
             // 递归处理所有子对象
             foreach (Transform child in obj.transform)
                 AddCollidersRecursively(child.gameObject);
+
+            toastMessage?.ShowMessage("Model Loaded");
         }
 
         void SetLayerRecursively(GameObject obj, int newLayer)

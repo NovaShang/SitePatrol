@@ -14,6 +14,7 @@ namespace SitePatrol
         public bool ready = false;
         public bool twoTags = false;
         public GameObject modelRoot;
+        public ToastMessage message;
 
         // 每个 Tag 的最终位置和可信度评分
         private Dictionary<int, TagPose> detectedMarkers = new();
@@ -123,6 +124,8 @@ namespace SitePatrol
             modelRoot.transform.rotation = originalRotation;
             modelRoot.transform.RotateAround(rotationCenter, Vector3.up,
                 rotationOffset.eulerAngles.y);
+            if (!ready)
+                message?.ShowMessage("Model Aligned, Capture Another Tag for Better Alignment");
             ready = true;
         }
 
