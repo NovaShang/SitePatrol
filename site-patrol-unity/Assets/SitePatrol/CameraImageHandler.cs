@@ -74,6 +74,8 @@ namespace SitePatrol
 
                 if (!cameraManager.TryAcquireLatestCpuImage(out var cpuImage)) return;
                 using (cpuImage)
+
+
                     CopyImageToTexture(cpuImage, out width, out height);
 
 
@@ -83,7 +85,6 @@ namespace SitePatrol
                 {
                     if (needTransform)
                         pixels = RotatePixels90Clockwise(pixels, width, height);
-                    }
                 });
                 if (needTransform)
                     (width, height) = (height, width);
