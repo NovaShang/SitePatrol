@@ -98,5 +98,24 @@ namespace SitePatrol
             var result = JsonConvert.DeserializeAnonymousType(req.downloadHandler.text, output);
             return result;
         }
+
+
+        public static async Task<string> UploadImage(byte[] image)
+        {
+            // 使用 WWWForm 来构建请求
+            WWWForm form = new WWWForm();
+            // "file" 对应服务端接收文件时的字段名（FastAPI 默认：UploadFile 或自定义 Depends 参数中的名称）
+            form.AddBinaryData("file", image, "image.jpg", "image/jpeg");
+            var req = UnityWebRequest.Post(BaseUrl + "/api/v1/file/upload", form);
+            await req.SendWebRequest();
+            if (req.result == UnityWebRequest.Result.ConnectionError ||
+                req.result == UnityWebRequest.Result.ProtocolError)
+            {
+                Debug.LogError("Error: " + req.error);
+                throw new Exception("Server Error: " + req.url + "\n" + req.error);
+            }
+
+            return req.downloadHandler.text;
+        }
     }
 }

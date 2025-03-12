@@ -83,7 +83,10 @@ namespace SitePatrol
                 {
                     if (needTransform)
                         pixels = RotatePixels90Clockwise(pixels, width, height);
+                    }
                 });
+                if (needTransform)
+                    (width, height) = (height, width);
                 OnImageReceived?.Invoke(pixels, width, height, fov, camPosition, camRotation);
             }
             catch (Exception ex)
